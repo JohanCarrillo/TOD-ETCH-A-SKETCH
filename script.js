@@ -59,14 +59,18 @@ function changeGridSize() {
   containerNew.setAttribute('id', 'container')
   // append new container
   document.querySelector('body').appendChild(containerNew);
-  gridGenerator(document.querySelector('#size').value);
+
+  const gridSize = document.querySelector('#size').value
+  gridGenerator(gridSize);
+
+  // show new gridSize
+  document.querySelector('output').textContent = gridSize + 'x' + gridSize;
 }
 
 // ---------------------------- BUTTONS FUNCTIONS ------------------------------
 function paintBlack() {
   // this function enables the painting black when the mouse pass over the cell
   const cellArray = Array.from(document.querySelectorAll('.cell'));
-  console.log('painting black');
   cellArray.forEach(element => element.addEventListener('mouseover', () => {
     //element.classList.remove('erase');
     element.classList.add('paint-black');
@@ -81,14 +85,6 @@ function eraser() {
     element.classList.remove('paint-black');
     }
   ));
-}
-
-function clear() {
-  // this function make blank the complete grid
-  const cellArray = Array.from(document.querySelectorAll('.cell'));
-  cellArray.forEach(element => {
-    element.classList.remove('paint-black');
-  })
 }
 
 function displayGrid(show) {
@@ -108,6 +104,32 @@ function displayGrid(show) {
   }
   return showNew;
 }
+function randomColor() {
+
+  const chooseColor = () => {
+    // creates a random color
+    const h = Math.floor(Math.random() * 360);
+    const s =  Math.floor(Math.random() * 100);
+    const l =  Math.floor(Math.random() * 100);
+    return `hsl(${h}deg, ${s}%, ${l}%)`;
+  }
+
+  const cellArray = Array.from(document.querySelectorAll('.cell'));
+  cellArray.forEach(element => element.addEventListener('mouseover', () => {
+    // check if the cell is already randomed
+    if (element.classList.contains('randomed')) {
+      // reduce s by 10%
+      console.log(element.style.backgroundColor);
+    } else{  // if not, then random it
+      element.classList.remove('paint-black');
+      element.classList.add('randomed');
+      const color = chooseColor();
+      element.style.backgroundColor = color;
+      //console.log(color);
+    }
+  }
+  ));
+}
 
 // ----------------------------- INITIALIZATION ----------------------------
 // generate initial grid
@@ -125,10 +147,10 @@ gridSize.addEventListener('click', () => {
 // enable buttons functionality
 document.querySelector('#paint-black').addEventListener('click', paintBlack);
 document.querySelector('#erase').addEventListener('click', eraser);
-document.querySelector('#clear').addEventListener('click', clear);
+document.querySelector('#clear').addEventListener('click', changeGridSize);
 document.querySelector('#display-grid').addEventListener('click', () => 
     displayGridBool = displayGrid (displayGridBool));
-
-
+document.querySelector('#random').addEventListener('click', randomColor);
+// ----------------------------------------------------------
 
 
