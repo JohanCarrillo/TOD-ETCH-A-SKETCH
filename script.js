@@ -31,6 +31,7 @@ function gridGenerator(numGrids){
     const div = document.createElement('div');
     div.classList.add('cell');
     parentNode.appendChild(div);
+    return;
   }
   
   function createRow(numGrid, parentNode) {
@@ -61,7 +62,7 @@ function changeGridSize() {
   gridGenerator(document.querySelector('#size').value);
 }
 
-// -------------------------------------------------------------------------
+// ---------------------------- BUTTONS FUNCTIONS ------------------------------
 function paintBlack() {
   // this function enables the painting black when the mouse pass over the cell
   const cellArray = Array.from(document.querySelectorAll('.cell'));
@@ -89,8 +90,30 @@ function clear() {
     element.classList.remove('paint-black');
   })
 }
+
+function displayGrid(show) {
+  // this function show/hide the grid
+  const cellArray = Array.from(document.querySelectorAll('.cell'));
+  let showNew;
+  if (show === false) {
+    cellArray.forEach(element => {
+    element.setAttribute('style', 'border: 1px dashed grey');
+    })
+    showNew = true;
+  } else {
+      cellArray.forEach(element => {
+        element.setAttribute('style', 'border: 0px');
+      })
+      showNew = false;
+  }
+  return showNew;
+}
+
+// ----------------------------- INITIALIZATION ----------------------------
 // generate initial grid
 gridGenerator(16);
+// displaygrid
+displayGridBool = false;
 
 // enable size change
 const gridSize = document.querySelector('#size');
@@ -103,7 +126,8 @@ gridSize.addEventListener('click', () => {
 document.querySelector('#paint-black').addEventListener('click', paintBlack);
 document.querySelector('#erase').addEventListener('click', eraser);
 document.querySelector('#clear').addEventListener('click', clear);
-
+document.querySelector('#display-grid').addEventListener('click', () => 
+    displayGridBool = displayGrid (displayGridBool));
 
 
 

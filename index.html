@@ -7,13 +7,15 @@
   <script type="text/javascript" src="script.js" defer></script>
 </head>
 <body>
-  <div class="options">
+  <div id="options">
     <button id="paint-black">black</button>
     <button id="erase">eraser</button>
     <button id="clear">clear board</button>
+    <button id="display-grid">grid</button>
     <span id="size-container">
-    <input id="size" type="range" min="5" max="100" value="16" step="1">
-    <output id="bubble"></output>
+      <input id="size" type="range" min="5" max="100" value="16" step="1">
+      <output id="bubble"></output>
+    </span>
   </div>
 
   <div id="container"></div>

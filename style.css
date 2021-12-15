@@ -1,16 +1,25 @@
-.options {
+body{
   display: flex;
   align-items: center;
+  flex-direction: column;
+  gap: 16px;
+}
+
+#options {
+  display: flex;
+  align-items: center;
+  padding: 16px;
 }
 
 
 #container {
-  max-width: 80vw;
-  max-height: 80vw;
+  width: 550px;
+  height: 550px;
   display: flex;
   flex-direction: column;
   gap: 0px;
   background-color: white;
+  border: solid brown 4px;
 }
 
 /* .grid {
@@ -21,10 +30,11 @@
 }
  */
 .cell {
-  border: 1px solid red;
-  width: 4vw;
-  height: 4vw;
+  
+  /* max-width: 4vw;
+  max-height: 4vw; */
   display: table-cell;
+  flex: 1 1 0;
 }
 
 .erase{
@@ -35,15 +45,14 @@
 }
 
 .row {
-  border: 0px;
-  padding: 0px;
-  margin: 0px;
-  display: none;
+  display: flex;
 }
 
 span {
-  display: auto;
-  flex: 0 0 auto;
+  width: inherit;
+  /* height: 4vw; */
+  display: flex;
+  flex: 1 1 auto;
 }
 /* ---------------------------------------------------------- */
 /* 
