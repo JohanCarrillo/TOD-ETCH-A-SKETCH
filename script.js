@@ -104,28 +104,41 @@ function displayGrid(show) {
   }
   return showNew;
 }
+
 function randomColor() {
 
-  const chooseColor = () => {
-    // creates a random color
-    const h = Math.floor(Math.random() * 360);
-    const s =  Math.floor(Math.random() * 100);
-    const l =  Math.floor(Math.random() * 100);
-    return `hsl(${h}deg, ${s}%, ${l}%)`;
-  }
-
   const cellArray = Array.from(document.querySelectorAll('.cell'));
+  const colorPercentArray = new Array(cellArray.length);  // to store ID & lightness
+  
+  
+
   cellArray.forEach(element => element.addEventListener('mouseover', () => {
+    const cellId = cellArray.indexOf(element);  // ID of each cell
+
+    const chooseColor = () => {
+      // // receives a 1x3 array to store the color values. Creates a random color
+      const r = Math.floor(Math.random() * 256);
+      const g =  Math.floor(Math.random() * 256);
+      const b =  Math.floor(Math.random() * 256);
+      colorPercentArray[cellId] = [r*0.1, g*0.1, b*0.1];  // 10% of each color
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
     // check if the cell is already randomed
     if (element.classList.contains('randomed')) {
       // reduce s by 10%
-      console.log(element.style.backgroundColor);
-    } else{  // if not, then random it
+      //console.log(element.style.backgroundColor);
+
+    } else{  // if not, then random it and store the 10% brightness
+      // remove black
       element.classList.remove('paint-black');
+      // paint
       element.classList.add('randomed');
-      const color = chooseColor();
+      // choose color and save 10% of each component
+      const color = chooseColor(colorPercentArray, cellId);
+      console.log(colorPercentArray[cellId]);
       element.style.backgroundColor = color;
-      //console.log(color);
+      
     }
   }
   ));
