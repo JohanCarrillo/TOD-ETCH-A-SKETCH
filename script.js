@@ -72,8 +72,8 @@ function paintBlack() {
   // this function enables the painting black when the mouse pass over the cell
   const cellArray = Array.from(document.querySelectorAll('.cell'));
   cellArray.forEach(element => element.addEventListener('mouseover', () => {
-    //element.classList.remove('erase');
-    element.classList.add('paint-black');
+    element.classList.remove('randomed');
+    element.style.backgroundColor = 'black';
     }
   ));
 }
@@ -82,7 +82,8 @@ function eraser() {
   // this function enables the painting white or "eraser" when passing over a cell
   const cellArray = Array.from(document.querySelectorAll('.cell'));
   cellArray.forEach(element => element.addEventListener('mouseover', () => {
-    element.classList.remove('paint-black');
+    element.classList.remove('randomed');
+    element.style.backgroundColor = 'white';
     }
   ));
 }
@@ -108,10 +109,8 @@ function displayGrid(show) {
 function randomColor() {
 
   const cellArray = Array.from(document.querySelectorAll('.cell'));
-  const colorPercentArray = new Array(cellArray.length);  // to store ID & lightness
+  const colorPercentArray = new Array(cellArray.length);  // to store 10% of color
   
-  
-
   cellArray.forEach(element => element.addEventListener('mouseover', () => {
     const cellId = cellArray.indexOf(element);  // ID of each cell
 
@@ -120,28 +119,46 @@ function randomColor() {
       const r = Math.floor(Math.random() * 256);
       const g =  Math.floor(Math.random() * 256);
       const b =  Math.floor(Math.random() * 256);
-      colorPercentArray[cellId] = [r*0.1, g*0.1, b*0.1];  // 10% of each color
+      colorPercentArray[cellId] = [Math.floor(r*0.1), Math.floor(g*0.1), Math.floor(b*0.1)];  // 10% of each color
       return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    const reduceColor = () => {
+      // reduce each component of rgb by 10%
+      // read current color
+      let rgb = element.style.backgroundColor;
+      // separate in components
+      rgb = rgb.replace(/[^\d,]/g, '').split(',');
+      // reduce intensity
+      for (let i=0; i<3; i++) {
+        const delta = rgb[i] - colorPercentArray[cellId][i];
+        delta <= 0 ? rgb[i] = 0 : rgb[i] -= colorPercentArray[cellId][i];
+      }
+      return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
     }
 
     // check if the cell is already randomed
     if (element.classList.contains('randomed')) {
-      // reduce s by 10%
+      // reduce rgb by 10%
+      const newColor = reduceColor();
+      console.log('New color: ' + newColor);
+      element.style.backgroundColor = newColor;
+
       //console.log(element.style.backgroundColor);
 
     } else{  // if not, then random it and store the 10% brightness
       // remove black
-      element.classList.remove('paint-black');
       // paint
       element.classList.add('randomed');
       // choose color and save 10% of each component
-      const color = chooseColor(colorPercentArray, cellId);
+      const color = chooseColor();
       console.log(colorPercentArray[cellId]);
       element.style.backgroundColor = color;
       
     }
   }
   ));
+  return;
 }
 
 // ----------------------------- INITIALIZATION ----------------------------
