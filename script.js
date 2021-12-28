@@ -26,21 +26,23 @@ gridGenerator(16);
 
 // using flex-box
 function gridGenerator(numGrids){
+  /* generate a square grid of numGrid*numGrids size. Each cell is a div*/
 
   function insertDiv(parentNode) {
+    // generate a single cell
     const div = document.createElement('div');
     div.classList.add('cell');
     parentNode.appendChild(div);
     return;
   }
   
-  function createRow(numGrid, parentNode) {
+  function createRow(numGrid, parentNode) {  // generate a row
     for (let i=0; i<numGrid; i++) insertDiv(parentNode);
     return;
   }
 
   const container = document.querySelector('#container');
-  for (let i=0; i<numGrids; i++) {
+  for (let i=0; i<numGrids; i++) {  // push all the rows to create the grid
     const span = document.createElement('span');
     //span.classList.add('row')
     createRow(numGrids, span);
@@ -51,6 +53,7 @@ function gridGenerator(numGrids){
 
 function changeGridSize() {
   // this function deletes the actual grid and creates a new one with the input value
+  
   // delete old container
   const containerOld = document.querySelector('#container');
   containerOld.parentNode.removeChild(containerOld);
@@ -60,8 +63,8 @@ function changeGridSize() {
   // append new container
   document.querySelector('body').appendChild(containerNew);
 
-  const gridSize = document.querySelector('#size').value
-  gridGenerator(gridSize);
+  const gridSize = document.querySelector('#size').value;;  // get new size
+  gridGenerator(gridSize);  // generate new grid
 
   // show new gridSize
   document.querySelector('output').textContent = gridSize + 'x' + gridSize;
@@ -70,6 +73,7 @@ function changeGridSize() {
 // ---------------------------- BUTTONS FUNCTIONS ------------------------------
 function paintBlack() {
   // this function enables the painting black when the mouse pass over the cell
+
   const cellArray = Array.from(document.querySelectorAll('.cell'));
   cellArray.forEach(element => element.addEventListener('mouseover', () => {
     element.classList.remove('randomed');
@@ -80,6 +84,7 @@ function paintBlack() {
 
 function eraser() {
   // this function enables the painting white or "eraser" when passing over a cell
+
   const cellArray = Array.from(document.querySelectorAll('.cell'));
   cellArray.forEach(element => element.addEventListener('mouseover', () => {
     element.classList.remove('randomed');
@@ -90,6 +95,7 @@ function eraser() {
 
 function displayGrid(show) {
   // this function show/hide the grid
+
   const cellArray = Array.from(document.querySelectorAll('.cell'));
   let showNew;
   if (show === false) {
@@ -107,15 +113,18 @@ function displayGrid(show) {
 }
 
 function randomColor() {
+ /* this function generates a random color the first time you pass over a cell
+    then reduces lightness of that color by 10% each time you pass over the cell
+    until it gets completely black*/
 
   const cellArray = Array.from(document.querySelectorAll('.cell'));
-  const colorPercentArray = new Array(cellArray.length);  // to store 10% of color
+  const colorPercentArray = new Array(cellArray.length);  // to store IDs and 10% of color (1x3) array
   
   cellArray.forEach(element => element.addEventListener('mouseover', () => {
-    const cellId = cellArray.indexOf(element);  // ID of each cell
+    const cellId = cellArray.indexOf(element);  // index of each cell
 
     const chooseColor = () => {
-      // // receives a 1x3 array to store the color values. Creates a random color
+      // receives a 1x3 array to store the 10% of color values. returns a random RGB color
       const r = Math.floor(Math.random() * 256);
       const g =  Math.floor(Math.random() * 256);
       const b =  Math.floor(Math.random() * 256);
@@ -125,6 +134,7 @@ function randomColor() {
 
     const reduceColor = () => {
       // reduce each component of rgb by 10%
+
       // read current color
       let rgb = element.style.backgroundColor;
       // separate in components
@@ -132,29 +142,23 @@ function randomColor() {
       // reduce intensity
       for (let i=0; i<3; i++) {
         const delta = rgb[i] - colorPercentArray[cellId][i];
-        delta <= 0 ? rgb[i] = 0 : rgb[i] -= colorPercentArray[cellId][i];
+        delta <= 0 ? rgb[i] = 0 : rgb[i] -= colorPercentArray[cellId][i];  // if left than zero make it black
       }
       return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
     }
 
-    // check if the cell is already randomed
+    // check if the cell is already painted with random
     if (element.classList.contains('randomed')) {
       // reduce rgb by 10%
       const newColor = reduceColor();
       console.log('New color: ' + newColor);
       element.style.backgroundColor = newColor;
-
-      //console.log(element.style.backgroundColor);
-
     } else{  // if not, then random it and store the 10% brightness
-      // remove black
       // paint
       element.classList.add('randomed');
       // choose color and save 10% of each component
       const color = chooseColor();
-      console.log(colorPercentArray[cellId]);
       element.style.backgroundColor = color;
-      
     }
   }
   ));
